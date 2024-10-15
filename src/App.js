@@ -84,3 +84,14 @@ const App = () => {
           font-weight: bold;
           color: blue;
         }
+        .inactive {
+          background-color: #f9f9f9;
+          color: #999;
+          text-decoration: line-through;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default App;
