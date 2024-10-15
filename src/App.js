@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 
 const App = () => {
   // Initial state with skills data
@@ -30,39 +28,13 @@ const App = () => {
     setSkills(updatedSkills);
   };
 
-  // Export the table as an image
-  const exportToImage = () => {
-    const table = document.getElementById('table-to-export');
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = imgData;
-      link.download = 'skills_table.png';
-      link.click();
-    });
-  };
-
-  // Export the table as a PDF
-  const exportToPDF = () => {
-    const table = document.getElementById('table-to-export');
-    html2canvas(table).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'pt', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('skills_table.pdf');
-    });
-  };
-
   return (
     <div>
       {/* Total score display */}
       <div className="score">Total Score: {totalScore} / 180</div>
 
       {/* Skills table */}
-      <table id="table-to-export">
+      <table>
         <thead>
           <tr>
             <th>Level</th>
@@ -88,10 +60,6 @@ const App = () => {
           ))}
         </tbody>
       </table>
-
-      {/* Buttons for exporting */}
-      <button onClick={exportToImage}>Export to Image</button>
-      <button onClick={exportToPDF}>Export to PDF</button>
 
       {/* Inline styles for active/inactive row */}
       <style jsx>{`
