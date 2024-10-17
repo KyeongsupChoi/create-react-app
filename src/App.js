@@ -1,50 +1,66 @@
 import React, { useState } from 'react';
+import { Bar } from 'react-chartjs-2';
+import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const App = () => {
   // Initial state with skills data
- const initialData = [
-  { level: 'Beginner', description: 'Basic understanding of server-side programming languages (e.g., Python, Node.js, Java, Ruby)', weight: 5, active: true },
-  { level: 'Beginner', description: 'Familiarity with HTTP protocols, request/response cycles, and basic client-server architecture.', weight: 5, active: true },
-  { level: 'Beginner', description: 'Ability to set up a simple server using frameworks like Flask, Express, or Django.', weight: 5, active: true },
-  { level: 'Beginner', description: 'Basic understanding of databases (SQL or NoSQL) and how to perform CRUD operations (Create, Read, Update, Delete).', weight: 5, active: true },
-  { level: 'Beginner', description: 'Awareness of RESTful API concepts and how to create simple endpoints.', weight: 5, active: true },
-  { level: 'Beginner', description: 'Setting up a simple web server that responds to HTTP requests.', weight: 5, active: true },
-  { level: 'Beginner', description: 'Implementing basic user authentication and handling form data.', weight: 5, active: true },
-  { level: 'Beginner', description: 'Writing API endpoints that interact with a database.', weight: 5, active: true },
-  { level: 'Beginner', description: 'Implementing data validation and error handling for user input before storing it in the database, ensuring data integrity and security.', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Proficient in designing and implementing RESTful APIs with CRUD functionality.', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Understanding of relational databases (e.g., MySQL, PostgreSQL) and NoSQL databases (e.g., MongoDB, Redis), including schema design, relationships, and indexing.', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Familiar with middleware, routing, and handling file uploads.', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Knowledge of authentication methods like OAuth, JWT, and sessions.', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Experience with version control systems (e.g., Git) and basic knowledge of continuous integration and deployment (CI/CD).', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Developing an API for user management (e.g., authentication, authorization).', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Setting up middleware for logging, error handling, and security in a web application.', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Connecting your backend with external services via APIs (e.g., payment gateways, third-party APIs).', weight: 5, active: true },
-  { level: 'Intermediate', description: 'Designing a relational database schema and optimizing queries.', weight: 5, active: true },
-  { level: 'Advanced', description: 'Proficiency in implementing robust authentication and authorization mechanisms, such as Single Sign-On (SSO) and Role-Based Access Control (RBAC), to ensure secure access management.', weight: 0, active: false },
-  { level: 'Advanced', description: 'Knowledge of microservices architecture and ability to design and develop microservices-based applications.', weight: 0, active: false },
-  { level: 'Advanced', description: 'Proficient in using messaging queues (e.g., RabbitMQ, Kafka) for asynchronous processing and communication.', weight: 0, active: false },
-  { level: 'Advanced', description: 'Experience with cloud infrastructure (e.g., AWS, Google Cloud, Azure), containerization (Docker), and orchestration tools (Kubernetes).', weight: 0, active: false },
-  { level: 'Advanced', description: 'Understanding of caching strategies, load balancing, and scaling backend systems to handle high traffic.', weight: 0, active: false },
-  { level: 'Advanced', description: 'Designing and deploying a microservices-based architecture with services that communicate asynchronously.', weight: 0, active: false },
-  { level: 'Advanced', description: 'Setting up continuous integration/continuous deployment (CI/CD) pipelines for automated testing and deployment.', weight: 5, active: true },
-  { level: 'Advanced', description: 'Implementing caching strategies (e.g., Redis, Memcached) to optimize API performance.', weight: 5, active: true },
-  { level: 'Expert', description: 'Mastery of distributed systems, including managing data consistency, eventual consistency, and CAP theorem implications.', weight: 0, active: false },
-  { level: 'Expert', description: 'Expertise in backend architecture patterns (e.g., event-driven architecture, CQRS, serverless) for complex and high-traffic systems.', weight: 0, active: false },
-  { level: 'Expert', description: 'Deep knowledge of security best practices, including encryption, secure communication, and data protection in large-scale applications.', weight: 0, active: false },
-  { level: 'Expert', description: 'Extensive experience with database replication, sharding, and high availability setups.', weight: 0, active: false },
-  { level: 'Expert', description: 'Ability to lead backend development teams, perform code reviews, and ensure code quality standards.', weight: 0, active: false },
-  { level: 'Expert', description: 'Familiarity with DevOps tools and practices, including Infrastructure as Code (IaC) and full automation of deployment pipelines.', weight: 0, active: false },
-  { level: 'Expert', description: 'Architecting large-scale distributed systems with fault-tolerant and highly available components.', weight: 0, active: false },
-  { level: 'Expert', description: 'Implementing advanced security mechanisms like end-to-end encryption and secure API gateways.', weight: 0, active: false },
-  { level: 'Expert', description: 'Leading a backend development team, defining project architecture, and overseeing codebase and deployment strategies.', weight: 0, active: false }
-];
+  const initialData = [
+    { level: 'Beginner', description: 'Basic understanding of server-side programming languages (e.g., Python, Node.js, Java, Ruby)', weight: 5, active: true },
+    { level: 'Beginner', description: 'Familiarity with HTTP protocols, request/response cycles, and basic client-server architecture.', weight: 5, active: true },
+    { level: 'Beginner', description: 'Ability to set up a simple server using frameworks like Flask, Express, or Django.', weight: 5, active: true },
+    { level: 'Beginner', description: 'Basic understanding of databases (SQL or NoSQL) and how to perform CRUD operations (Create, Read, Update, Delete).', weight: 5, active: true },
+    { level: 'Intermediate', description: 'Proficient in designing and implementing RESTful APIs with CRUD functionality.', weight: 5, active: true },
+    { level: 'Intermediate', description: 'Understanding of relational databases and NoSQL databases (e.g., MongoDB, Redis).', weight: 5, active: true },
+    { level: 'Advanced', description: 'Setting up continuous integration/continuous deployment (CI/CD) pipelines.', weight: 5, active: true },
+    { level: 'Advanced', description: 'Implementing caching strategies (e.g., Redis, Memcached) to optimize API performance.', weight: 5, active: true }
+  ];
 
   // State to hold the skill data
   const [skills, setSkills] = useState(initialData);
 
   // Calculate the total score from active skills
   const totalScore = skills.reduce((sum, skill) => (skill.active ? sum + skill.weight : sum), 0);
+
+  // Data for chart
+  const chartData = {
+    labels: skills.map((skill) => skill.description), // Skill descriptions
+    datasets: [
+      {
+        label: 'Active Skills',
+        data: skills.map((skill) => (skill.active ? skill.weight : 0)),
+        backgroundColor: 'rgba(75, 192, 192, 0.6)', // Active skill bar color
+      },
+      {
+        label: 'Inactive Skills',
+        data: skills.map((skill) => (!skill.active ? skill.weight : 0)),
+        backgroundColor: 'rgba(255, 99, 132, 0.6)', // Inactive skill bar color
+      }
+    ]
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top'
+      },
+      title: {
+        display: true,
+        text: 'Skill Progress Stacked Bar Chart'
+      }
+    },
+    scales: {
+      x: {
+        stacked: true
+      },
+      y: {
+        stacked: true,
+        beginAtZero: true
+      }
+    }
+  };
 
   // Toggle skill active/inactive status
   const toggleSkill = (index) => {
@@ -89,6 +105,11 @@ const App = () => {
           ))}
         </tbody>
       </table>
+
+      {/* Stacked bar chart */}
+      <div style={{ width: '80%', margin: '20px auto' }}>
+        <Bar data={chartData} options={options} />
+      </div>
 
       {/* Inline styles for active/inactive row */}
       <style jsx>{`
