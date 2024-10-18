@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const App = () => {
   // Initial state with skills data
- const initialData = [
+ const backendSkills = [
   { level: 'Beginner', description: 'Basic understanding of server-side programming languages (e.g., Python, Node.js, Java, Ruby)', weight: 5, active: true },
   { level: 'Beginner', description: 'Familiarity with HTTP protocols, request/response cycles, and basic client-server architecture.', weight: 5, active: true },
   { level: 'Beginner', description: 'Ability to set up a simple server using frameworks like Flask, Express, or Django.', weight: 5, active: true },
@@ -40,27 +40,39 @@ const App = () => {
   { level: 'Expert', description: 'Leading a backend development team, defining project architecture, and overseeing codebase and deployment strategies.', weight: 0, active: false }
 ];
 
-  // State to hold the skill data
-  const [skills, setSkills] = useState(initialData);
+   const dataScienceSkills = [
+    { level: 'Beginner', description: 'Basic understanding of statistics and data analysis.', weight: 5, active: true },
+    { level: 'Intermediate', description: 'Proficient in data wrangling: loading, cleaning, and transforming data using libraries like Pandas, NumPy, or R’s dplyr.', weight: 5, active: true },
+    { level: 'Advanced', description: 'Proficient in implementing complex machine learning algorithms (e.g., random forests, gradient boosting, neural networks) using libraries like scikit-learn, TensorFlow, or PyTorch.', weight: 0, active: false },
+  ];
 
-  // Calculate the total score from active skills
-  const totalScore = skills.reduce((sum, skill) => (skill.active ? sum + skill.weight : sum), 0);
+  // State to manage which skill group is active (backend or data science)
+  const [activeGroup, setActiveGroup] = useState('backend');
+  const [skills, setSkills] = useState(backendSkills);
 
-  // Toggle skill active/inactive status
-  const toggleSkill = (index) => {
-    const updatedSkills = skills.map((skill, i) => {
-      if (i === index) {
-        return { ...skill, active: !skill.active }; // Toggle the active status
-      }
-      return skill;
-    });
-    setSkills(updatedSkills);
+  // Function to toggle between backend and data science
+  const toggleGroup = (group) => {
+    if (group === 'backend') {
+      setSkills(backendSkills);
+    } else if (group === 'dataScience') {
+      setSkills(dataScienceSkills);
+    }
+    setActiveGroup(group);
   };
+
+  // Calculate total score based on active skills
+  const totalScore = skills.reduce((sum, skill) => (skill.active ? sum + skill.weight : sum), 0);
 
   return (
     <div>
+      <div>
+        {/* Toggle between backend and data science */}
+        <button onClick={() => toggleGroup('backend')} disabled={activeGroup === 'backend'}>Backend Skills</button>
+        <button onClick={() => toggleGroup('dataScience')} disabled={activeGroup === 'dataScience'}>Data Science Skills</button>
+      </div>
+
       {/* Total score display */}
-      <div className="score">Total Score: {totalScore} / 180</div>
+      <div className="score">Total Score: {totalScore} / {skills.length * 5}</div>
 
       {/* Skills table */}
       <table>
@@ -82,7 +94,11 @@ const App = () => {
                 <input
                   type="checkbox"
                   checked={skill.active}
-                  onChange={() => toggleSkill(index)}
+                  onChange={() => {
+                    const updatedSkills = [...skills];
+                    updatedSkills[index].active = !updatedSkills[index].active;
+                    setSkills(updatedSkills);
+                  }}
                 />
               </td>
             </tr>
@@ -90,7 +106,6 @@ const App = () => {
         </tbody>
       </table>
 
-      {/* Inline styles for active/inactive row */}
       <style jsx>{`
         table {
           width: 100%;
@@ -116,6 +131,17 @@ const App = () => {
         .inactive {
           background-color: #f9f9f9;
           color: #999;
+        }
+        button {
+          padding: 10px 20px;
+          margin: 5px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          cursor: pointer;
+        }
+        button:disabled {
+          background-color: #ccc;
         }
       `}</style>
     </div>
